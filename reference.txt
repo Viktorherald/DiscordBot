@@ -1,0 +1,40 @@
+const {
+	Client,
+	Intents,
+} = require('discord.js');
+
+const client = new Client({
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
+});
+
+client.on('ready', () => {
+	client.user.setActivity('with JavaScript');
+	const generalChannel = client.channels.cache.get('898170237239824404');
+	generalChannel.send('Bot, Online!');
+});
+
+client.on('messageCreate', (message) => {
+	// Prevent bot from responding to its own messages
+	if (message.author == client.user) {
+		return;
+	}
+	message.channel.send('Message received from ' + message.author.toString() +
+		' with content: ' + message.content);
+
+	setTimeout(function() {
+		message.channel.sendTyping();
+	}, 1000);
+
+	setTimeout(function() {
+		const rnd = Math.floor(Math.random() * 100);
+
+		if (rnd >= 50) {
+			message.react('👍');
+			message.channel.send('Message Score: ' + rnd + '\nNice message bro, give you a like!');
+		}
+		else {
+			message.channel.send('Message Score: ' + rnd + '\n... What the heck is that, yo?');
+			message.react('😡');
+		}
+	}, 3000);
+});
